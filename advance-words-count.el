@@ -2,29 +2,14 @@
 ;;
 ;; Filename: advance-words-count.el
 ;; Description: Provides Extended `count-words' function.
+;; Repository: https://github.com/LdBeth/advance-words-count.el
 ;; Author: LdBeth
 ;; Maintainer: LdBeth
 ;; Created: Wed Mar 29 14:42:25 2017 (+0800)
 ;; Version: 0.8.0
-;; Package-Requires: (pos-tip)
 ;; Last-Updated:
 ;;           By:
 ;;     Update #: 0
-;; URL:
-;; Doc URL:
-;; Keywords:
-;; Compatibility:
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;; Commentary:
-;;
-;;
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;; Change Log:
-;;
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -80,8 +65,7 @@
 (defcustom words-count-message-display 'minibuffer
   "The way how `message--words-count' display messages."
   :group 'advance-words-count
-  :type '(choice (const minibuffer)
-                 (const pos-tip)))
+  :type 'string)
 
 (defun special--words-count (start end regexp)
   "Count the word from START to END with REGEXP."
@@ -98,11 +82,8 @@
 Using the LIST passed form `advance-words-count'. START & END are
 required to call extra functions, see `count-lines' &
 `count-words'. When ARG is specified, display verbosely."
-  (format
-   (if arg
-       "
+  (format "
 -----------~*~ Words Count ~*~----------
-
  Characters (without Space) .... %d
  Characters (all) .............. %d
  Number of Lines ............... %d
@@ -110,24 +91,17 @@ required to call extra functions, see `count-lines' &
 %s
 ========================================
 "
-     "Ns:%d, Al:%d, Ln:%d, An:%d, %s")
    (cadr list)
    (- end start)
    (count-lines start end)
    (car (last list))
    (if (= 0 (car list))
-       (format (if arg
-                   " Latin Words ................... %d\n"
-                 "La:%d")
+       (format " Latin Words ................... %d\n"
                (count-words start end))
-     (format (if arg
-                 " CJK Chars ..................... %d
+     (format " CJK Chars ..................... %d
  Word Count .................... %d\n"
-               "Ha:%d, Wc:%d")
              (car list)
              (+ (car list) (car (last list)))))))
-
-(require 'pos-tip)
 
 (defun message--words-count (list &optional arg)
   "Display the word count message.
@@ -141,9 +115,6 @@ minibuffer."
     (if (null arg)
         (message string)
       (cond
-       ((eq opt 'pos-tip)
-        ;; Use `run-at-time' to avoid the problem caued by `flycheck-pos-tip'.
-        (run-at-time 0.1 nil #'pos-tip-show string nil nil nil -1))
        ((eq 'minibuffer opt)
         (message string))))))
 
@@ -154,7 +125,6 @@ If BEG = END, count the whole buffer. If called initeractively,
 use minibuffer to display the messages. The optional ARG will be
 passed to `format-message--words-count' to decide the style of
 display.
-
 See also `special-words-count'."
   (interactive (if (use-region-p)
                    (list (region-beginning)
@@ -175,3 +145,4 @@ See also `special-words-count'."
 (provide 'advance-words-count)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; advance-words-count.el ends here
+
